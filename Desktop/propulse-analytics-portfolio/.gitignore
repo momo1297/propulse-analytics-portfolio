@@ -1,0 +1,10 @@
+# Données générées (trop lourdes pour git)
+data/
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.env
