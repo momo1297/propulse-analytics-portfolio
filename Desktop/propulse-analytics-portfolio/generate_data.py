@@ -72,7 +72,11 @@ for i in range(N_SUBSCRIBERS):
     if channel == 'referral':       churn_prob *= 0.7
     if country != 'FR':             churn_prob *= 1.1
 
-    churned = converted and (random.random() < churn_prob * 18)
+    # Probabilité cumulée sur la durée — plafonnée à 85% max
+    months_active = max(1, (END_DATE - acq_date).days / 30)
+    cumulative_churn = 1 - (1 - churn_prob) ** months_active
+    cumulative_churn = min(cumulative_churn, 0.85)
+    churned = converted and (random.random() < cumulative_churn)
     if churned and conv_date:
         days_active = int(np.random.exponential(scale=120))
         churn_date  = conv_date + timedelta(days=max(30, days_active))
